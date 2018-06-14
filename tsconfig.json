@@ -1,0 +1,14 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "module": "system",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "outFile": "build/app.js",
+        "sourceMap": true
+    },
+    "include": [
+        "src/**/*"
+    ]
+}
