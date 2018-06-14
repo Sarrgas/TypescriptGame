@@ -1,11 +1,15 @@
-class World {
+class World implements Patterns.Interfaces.IObserver {
     public player: Player;
-    public enemies: Enemy[] = new Array<Enemy>();
-    public drawables: Drawable[] = new Array<Drawable>();
+    public enemies: Enemy[];
+    public enemiesOnScreen: Enemy[];
+    public drawables: Drawable[];
     public currentLevel: Level;
     private levelManager: LevelManager;
 
     constructor(){
+        this.enemies = [];
+        this.drawables = [];
+        this.enemiesOnScreen = [];
         this.levelManager = new LevelManager();
         this.currentLevel = this.levelManager.Createlevel(1);
         this.enemies = this.currentLevel.enemies.slice();
@@ -14,7 +18,6 @@ class World {
 
     public addEnemy(e : Enemy){
         this.enemies.push(e);
-        this.drawables.push(e);
     }
 
     public addPlayer(p : Player){
@@ -24,5 +27,10 @@ class World {
 
     public addGUIelement(d : Drawable){
         this.drawables.push(d);
+    }
+
+    public ReceiveNotification(Enemy: Enemy) : void{
+        this.enemiesOnScreen.push(Enemy);
+        this.drawables.push(Enemy);
     }
 }

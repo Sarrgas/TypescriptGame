@@ -43,7 +43,7 @@ var Game = (function () {
         }
     };
     Game.prototype.collisionDetection = function () {
-        for (var _i = 0, _a = this.world.enemies; _i < _a.length; _i++) {
+        for (var _i = 0, _a = this.world.enemiesOnScreen; _i < _a.length; _i++) {
             var e = _a[_i];
             if (this.world.player.collisionWith(e)) {
                 this.healthbar.decrement(6);
@@ -68,6 +68,9 @@ var Game = (function () {
         this.world.addPlayer(new Player(400, 400));
         this.healthbar = new Healthbar(140, 650);
         this.world.addGUIelement(this.healthbar);
+        for (var i = 0; i < this.world.currentLevel.enemies.length; i++) {
+            this.world.currentLevel.enemies[i].RegisterObserver(this.world);
+        }
         this.gameLoop();
     };
     return Game;
@@ -101,11 +104,20 @@ var Enemy = (function (_super) {
     function Enemy(x, y) {
         var _this = _super.call(this, x, y) || this;
         _this.speed = 2;
+        _this.onscreen = false;
+        _this.elapsedFrames = 0;
         _this.walk = function () {
             _this.y += _this.speed;
+            _this.elapsedFrames++;
+            if (!_this.onscreen && _this.elapsedFrames >= 60 && _this.y > 0) {
+                _this.elapsedFrames = 0;
+                _this.onscreen = true;
+                _this.NotifyObservers();
+            }
             requestAnimationFrame(_this.walk);
         };
         _this.size = 80;
+        _this._observers = [];
         _this.sprite = new Image(_this.size, _this.size);
         _this.sprite.src = 'astroid.png';
         _this.walk();
@@ -113,6 +125,14 @@ var Enemy = (function (_super) {
     }
     Enemy.prototype.draw = function (ctx) {
         ctx.drawImage(this.sprite, this.x, this.y, this.sprite.width, this.sprite.height);
+    };
+    Enemy.prototype.RegisterObserver = function (obs) {
+        this._observers.push(obs);
+    };
+    Enemy.prototype.NotifyObservers = function () {
+        for (var i = 0; i < this._observers.length; i++) {
+            this._observers[i].ReceiveNotification(this);
+        }
     };
     return Enemy;
 }(Drawable));
@@ -168,7 +188,6 @@ var LevelManager = (function () {
         switch (nr) {
             case 1:
                 return this.CreateLevel1();
-                break;
             default:
                 break;
         }
@@ -290,6 +309,7 @@ var Player = (function (_super) {
     function Player(x, y) {
         var _this = _super.call(this, x, y) || this;
         _this.speed = 3;
+        _this._observers = [];
         _this.size = 100;
         _this.sprite = new Image(_this.size, _this.size);
         _this.sprite.src = 'ship.png';
@@ -310,12 +330,16 @@ var Player = (function (_super) {
     Player.prototype.goDown = function () {
         this.y += this.speed;
     };
+    Player.prototype.RegisterObserver = function (obs) {
+        this._observers.push(obs);
+    };
     return Player;
 }(Drawable));
 var World = (function () {
     function World() {
-        this.enemies = new Array();
-        this.drawables = new Array();
+        this.enemies = [];
+        this.drawables = [];
+        this.enemiesOnScreen = [];
         this.levelManager = new LevelManager();
         this.currentLevel = this.levelManager.Createlevel(1);
         this.enemies = this.currentLevel.enemies.slice();
@@ -323,7 +347,6 @@ var World = (function () {
     }
     World.prototype.addEnemy = function (e) {
         this.enemies.push(e);
-        this.drawables.push(e);
     };
     World.prototype.addPlayer = function (p) {
         this.player = p;
@@ -332,6 +355,27 @@ var World = (function () {
     World.prototype.addGUIelement = function (d) {
         this.drawables.push(d);
     };
+    World.prototype.ReceiveNotification = function (Enemy) {
+        this.enemiesOnScreen.push(Enemy);
+        this.drawables.push(Enemy);
+    };
     return World;
 }());
+var Patterns;
+(function (Patterns) {
+    var Interfaces;
+    (function (Interfaces) {
+        var CollisionDetector = (function () {
+            function CollisionDetector(mySubject) {
+                this._subject = mySubject;
+                this._myId = CollisionDetector.NextId++;
+            }
+            CollisionDetector.prototype.ReceiveNotification = function (Enemy) {
+            };
+            CollisionDetector.NextId = 0;
+            return CollisionDetector;
+        }());
+        Interfaces.CollisionDetector = CollisionDetector;
+    })(Interfaces = Patterns.Interfaces || (Patterns.Interfaces = {}));
+})(Patterns || (Patterns = {}));
 //# sourceMappingURL=app.js.map

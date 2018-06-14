@@ -3,6 +3,7 @@ class Game{
     private healthbar: Healthbar;
     private isRunning: boolean = true;
     private world: World;
+    private collisiondetector: Patterns.Interfaces.CollisionDetector;
  
     private gameLoop = () => {
         this.processInput();
@@ -34,7 +35,8 @@ class Game{
     }
 
     private collisionDetection() : void{
-        for (const e of this.world.enemies) {
+       
+        for (const e of this.world.enemiesOnScreen) {
             if(this.world.player.collisionWith(e)){
                 this.healthbar.decrement(6);
             }
@@ -63,6 +65,10 @@ class Game{
 
         this.healthbar = new Healthbar(140,650);
         this.world.addGUIelement(this.healthbar);
+
+        for (let i = 0; i < this.world.currentLevel.enemies.length; i++) {
+            this.world.currentLevel.enemies[i].RegisterObserver(this.world);
+        }
 
         this.gameLoop();
      }

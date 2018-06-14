@@ -9,7 +9,6 @@ class LevelManager{
         switch (nr) {
             case 1:
                 return this.CreateLevel1();
-                break;
             default:
                 break;
         }
