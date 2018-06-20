@@ -361,21 +361,4 @@ var World = (function () {
     };
     return World;
 }());
-var Patterns;
-(function (Patterns) {
-    var Interfaces;
-    (function (Interfaces) {
-        var CollisionDetector = (function () {
-            function CollisionDetector(mySubject) {
-                this._subject = mySubject;
-                this._myId = CollisionDetector.NextId++;
-            }
-            CollisionDetector.prototype.ReceiveNotification = function (Enemy) {
-            };
-            CollisionDetector.NextId = 0;
-            return CollisionDetector;
-        }());
-        Interfaces.CollisionDetector = CollisionDetector;
-    })(Interfaces = Patterns.Interfaces || (Patterns.Interfaces = {}));
-})(Patterns || (Patterns = {}));
 //# sourceMappingURL=app.js.map
