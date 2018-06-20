@@ -3,7 +3,6 @@ class Game{
     private healthbar: Healthbar;
     private isRunning: boolean = true;
     private world: World;
-    private collisiondetector: Patterns.Interfaces.CollisionDetector;
  
     private gameLoop = () => {
         this.processInput();
