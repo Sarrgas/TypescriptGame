@@ -9,7 +9,7 @@ class Goal extends Drawable{
     public draw(ctx: CanvasRenderingContext2D) : void{
         ctx.fillStyle = "red";
         ctx.font = "40px Arial";
-        ctx.fillText("TRYGG ARBETSPLATS UPPNADD",this.x,this.y);
+        ctx.fillText("TRYGG ARBETSPLATS UPPNÅDD",this.x,this.y);
     }
 
     private walk = () => {

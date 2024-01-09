@@ -24,7 +24,7 @@ class LevelManager{
         this.levels[1].enemies.push(new Enemy(700, 200, this.astroid));
         this.levels[1].enemies.push(new Enemy(200, 400, this.astroid));
         this.levels[1].enemies.push(new Enemy(900, 300, this.angel, "Student"));
-        this.levels[1].enemies.push(new Enemy(400, 0, this.robber, "Mordare"));
+        this.levels[1].enemies.push(new Enemy(400, 0, this.robber, "Mördare"));
         this.levels[1].enemies.push(new Enemy(600, -100, this.astroid));
         this.levels[1].enemies.push(new Enemy(1100, -150, this.astroid));
         this.levels[1].enemies.push(new Enemy(900, -200, this.angel, "Duktig pojke"));
@@ -32,7 +32,7 @@ class LevelManager{
         this.levels[1].enemies.push(new Enemy(500, -600, this.robber, "Narkotikabrott"));
         this.levels[1].enemies.push(new Enemy(400, -700, this.astroid));
         this.levels[1].enemies.push(new Enemy(800, -800, this.astroid));
-        this.levels[1].enemies.push(new Enemy(100, -800, this.angel, "Byradirektor"));
+        this.levels[1].enemies.push(new Enemy(100, -800, this.angel, "Byrådirektör"));
         this.levels[1].enemies.push(new Enemy(1100, -850, this.angel, "VD"));
         this.levels[1].enemies.push(new Enemy(600, -850, this.astroid));
         this.levels[1].enemies.push(new Enemy(200, -900, this.robber, "Skattefuskare"));
@@ -41,14 +41,14 @@ class LevelManager{
         this.levels[1].enemies.push(new Enemy(100, -1150, this.astroid));
         this.levels[1].enemies.push(new Enemy(1100, -1300, this.astroid));
         this.levels[1].enemies.push(new Enemy(600, -1300, this.astroid));
-        this.levels[1].enemies.push(new Enemy(750, -1400, this.robber, "Valdtacktsman"));
+        this.levels[1].enemies.push(new Enemy(750, -1400, this.robber, "Våldtäcktsman"));
         this.levels[1].enemies.push(new Enemy(400, -1450, this.angel, "Vanlig Svensson"));
         this.levels[1].enemies.push(new Enemy(800, -1600, this.astroid));
         this.levels[1].enemies.push(new Enemy(500, -1750, this.astroid));
         this.levels[1].enemies.push(new Enemy(1100, -1800, this.robber, "Drogkartell"));
         this.levels[1].enemies.push(new Enemy(150, -1900, this.astroid));
         this.levels[1].enemies.push(new Enemy(100, -2000, this.astroid));
-        this.levels[1].enemies.push(new Enemy(300, -2100, this.robber, "Jimmie Akesson"));
+        this.levels[1].enemies.push(new Enemy(300, -2100, this.robber, "Jimmie Åkesson"));
         this.levels[1].enemies.push(new Enemy(750, -2200, this.astroid));
         this.levels[1].enemies.push(new Enemy(400, -2300, this.astroid));
         this.levels[1].enemies.push(new Enemy(150, -2500, this.astroid));
@@ -127,7 +127,7 @@ class LevelManager{
         this.levels[1].enemies.push(new Enemy(500, -4300, this.astroid));
         this.levels[1].enemies.push(new Enemy(800, -4300, this.astroid));
         this.levels[1].enemies.push(new Enemy(1100, -4300, this.astroid));
-        this.levels[1].goal = new Goal(100, -4500);
+        this.levels[1].goal = new Goal(300, -4500);
         return this.levels[1];
     }
 }

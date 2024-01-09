@@ -4,12 +4,14 @@ class World implements Patterns.Interfaces.IObserver {
     public enemiesOnScreen: Enemy[];
     public bulletsOnScreen: Bullet[];
     public drawables: Drawable[];
+    public guiElements: Drawable[];
     public currentLevel: Level;
     private levelManager: LevelManager;
 
     constructor(){
         this.enemies = [];
         this.drawables = [];
+        this.guiElements = [];
         this.enemiesOnScreen = [];
         this.bulletsOnScreen = [];
         this.levelManager = new LevelManager();
@@ -29,7 +31,8 @@ class World implements Patterns.Interfaces.IObserver {
     }
 
     public addGUIelement(d : Drawable){
-        this.drawables.push(d);
+        // this.drawables.push(d);
+        this.guiElements.push(d);
     }
 
     public ReceiveNotification(Enemy: Enemy) : void{

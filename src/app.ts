@@ -37,6 +37,10 @@ class Game{
         for (const drawable of this.world.drawables) {
             drawable.draw(this.ctx);
         }
+
+        for (const guiElement of this.world.guiElements) {
+            guiElement.draw(this.ctx);
+        }
     }
 
     private shoot() : void {
