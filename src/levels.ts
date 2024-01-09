@@ -48,10 +48,10 @@ class LevelManager{
         this.levels[1].enemies.push(new Enemy(1100, -1800, this.robber, "Drogkartell"));
         this.levels[1].enemies.push(new Enemy(150, -1900, this.astroid));
         this.levels[1].enemies.push(new Enemy(100, -2000, this.astroid));
-        this.levels[1].enemies.push(new Enemy(300, -2100, this.astroid));
+        this.levels[1].enemies.push(new Enemy(300, -2100, this.robber, "Jimmie Akesson"));
         this.levels[1].enemies.push(new Enemy(750, -2200, this.astroid));
         this.levels[1].enemies.push(new Enemy(400, -2300, this.astroid));
-        this.levels[1].enemies.push(new Enemy(150, -2500, this.robber, "Jimmie Akesson"));
+        this.levels[1].enemies.push(new Enemy(150, -2500, this.astroid));
         this.levels[1].enemies.push(new Enemy(500, -2500, this.astroid));
         this.levels[1].enemies.push(new Enemy(800, -2500, this.astroid));
         this.levels[1].enemies.push(new Enemy(1100, -2500, this.astroid));
