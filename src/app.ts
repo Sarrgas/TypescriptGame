@@ -6,6 +6,8 @@ class Game{
     private world: World;
     private isMusicPlaying: boolean = false;
     private audio = new Audio("music.mp3");
+    private elapsedFrames: number = 0;
+    private frameOfLastShot: number = 0;
  
     private gameLoop = () => {
         this.processInput();
@@ -33,6 +35,7 @@ class Game{
     }
 
     private render() : void {
+        this.elapsedFrames++;
         this.clear();
         for (const drawable of this.world.drawables) {
             drawable.draw(this.ctx);
@@ -43,10 +46,14 @@ class Game{
         }
     }
 
-    private shoot() : void {
-        let bullet = new Bullet(this.world.player.x, this.world.player.y);
-        this.world.drawables.push(bullet)
-        this.world.bulletsOnScreen.push(bullet)
+    public shoot() : void {
+        if(this.elapsedFrames - this.frameOfLastShot > 20){
+            this.frameOfLastShot = this.elapsedFrames;
+            let bullet = new Bullet(this.world.player.x+35, this.world.player.y);
+            this.world.drawables.push(bullet)
+            this.world.bulletsOnScreen.push(bullet)
+        }
+        
     }
 
     private collisionDetection() : void{
@@ -60,7 +67,6 @@ class Game{
             if(currentEnemy.isDestroyable){
                 for(const b of this.world.bulletsOnScreen) {
                     if(b.collisionWith(currentEnemy)){
-                        console.log(currentEnemy.spriteSrc)
                         if(currentEnemy.spriteSrc == "robber.png"){
                             this.score.increment(50)
                         }
@@ -111,13 +117,9 @@ class Game{
      }
 }
 
-
-
-
  window.onload = () => {
     window.addEventListener('keyup', function(event) { Key.onKeyup(event); }, false);
     window.addEventListener('keydown', function(event) { Key.onKeydown(event); }, false);
     let game = new Game();
     game.init();
-    
  }

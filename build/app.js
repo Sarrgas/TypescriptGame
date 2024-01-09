@@ -19,6 +19,8 @@ var Game = (function () {
         this.isRunning = true;
         this.isMusicPlaying = false;
         this.audio = new Audio("music.mp3");
+        this.elapsedFrames = 0;
+        this.frameOfLastShot = 0;
         this.gameLoop = function () {
             _this.processInput();
             _this.update();
@@ -47,6 +49,7 @@ var Game = (function () {
         this.collisionDetection();
     };
     Game.prototype.render = function () {
+        this.elapsedFrames++;
         this.clear();
         for (var _i = 0, _a = this.world.drawables; _i < _a.length; _i++) {
             var drawable = _a[_i];
@@ -58,9 +61,12 @@ var Game = (function () {
         }
     };
     Game.prototype.shoot = function () {
-        var bullet = new Bullet(this.world.player.x, this.world.player.y);
-        this.world.drawables.push(bullet);
-        this.world.bulletsOnScreen.push(bullet);
+        if (this.elapsedFrames - this.frameOfLastShot > 20) {
+            this.frameOfLastShot = this.elapsedFrames;
+            var bullet = new Bullet(this.world.player.x + 35, this.world.player.y);
+            this.world.drawables.push(bullet);
+            this.world.bulletsOnScreen.push(bullet);
+        }
     };
     Game.prototype.collisionDetection = function () {
         for (var i = 0; i < this.world.enemiesOnScreen.length; i++) {
@@ -72,7 +78,6 @@ var Game = (function () {
                 for (var _i = 0, _a = this.world.bulletsOnScreen; _i < _a.length; _i++) {
                     var b = _a[_i];
                     if (b.collisionWith(currentEnemy)) {
-                        console.log(currentEnemy.spriteSrc);
                         if (currentEnemy.spriteSrc == "robber.png") {
                             this.score.increment(50);
                         }

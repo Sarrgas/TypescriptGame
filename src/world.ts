@@ -31,7 +31,6 @@ class World implements Patterns.Interfaces.IObserver {
     }
 
     public addGUIelement(d : Drawable){
-        // this.drawables.push(d);
         this.guiElements.push(d);
     }
 
