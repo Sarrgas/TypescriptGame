@@ -265,6 +265,7 @@ var LevelManager = (function () {
         this.astroid = 'astroid.png';
         this.robber = 'robber.png';
         this.angel = 'angel.png';
+        this.thought = 'thought.png';
         this.levels = new Array();
     }
     LevelManager.prototype.Createlevel = function (nr) {
@@ -282,7 +283,7 @@ var LevelManager = (function () {
         this.levels[1].enemies.push(new Enemy(900, 300, this.angel, "Student"));
         this.levels[1].enemies.push(new Enemy(400, 0, this.robber, "Mördare"));
         this.levels[1].enemies.push(new Enemy(600, -100, this.astroid));
-        this.levels[1].enemies.push(new Enemy(1100, -150, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -150, this.thought, "Är detta lagligt?"));
         this.levels[1].enemies.push(new Enemy(900, -200, this.angel, "Duktig pojke"));
         this.levels[1].enemies.push(new Enemy(300, -500, this.astroid));
         this.levels[1].enemies.push(new Enemy(500, -600, this.robber, "Narkotikabrott"));
