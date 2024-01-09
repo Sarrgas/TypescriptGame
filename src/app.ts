@@ -35,16 +35,29 @@ class Game{
     }
 
     private shoot() : void {
-        console.log('SPACE')
-        this.world.drawables.push(new Bullet(this.world.player.x, this.world.player.y))
+        let bullet = new Bullet(this.world.player.x, this.world.player.y);
+        this.world.drawables.push(bullet)
+        this.world.bulletsOnScreen.push(bullet)
     }
 
     private collisionDetection() : void{
        
-        for (const e of this.world.enemiesOnScreen) {
-            if(this.world.player.collisionWith(e)){
+        for (let i = 0; i < this.world.enemiesOnScreen.length; i++) {
+            let currentEnemy = this.world.enemiesOnScreen[i];
+            if(this.world.player.collisionWith(currentEnemy)){
                 this.healthbar.decrement(6);
             }
+
+            for(const b of this.world.bulletsOnScreen) {
+                if(b.collisionWith(currentEnemy)){
+                    currentEnemy.isDead = true;
+                    var enemyIndex = this.world.drawables.indexOf(currentEnemy)
+                    this.world.drawables.splice(enemyIndex,1)
+                    this.world.enemiesOnScreen.splice(i,1)
+                }
+            }
+
+            
         }
     }
 

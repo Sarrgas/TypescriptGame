@@ -2,7 +2,7 @@ class Bullet extends Drawable{
 
     public constructor(x: number, y:number){
         super(x, y);
-
+        this.size = 8;
 
         this.walk();
     }

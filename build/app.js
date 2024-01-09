@@ -50,14 +50,24 @@ var Game = (function () {
         }
     };
     Game.prototype.shoot = function () {
-        console.log('SPACE');
-        this.world.drawables.push(new Bullet(this.world.player.x, this.world.player.y));
+        var bullet = new Bullet(this.world.player.x, this.world.player.y);
+        this.world.drawables.push(bullet);
+        this.world.bulletsOnScreen.push(bullet);
     };
     Game.prototype.collisionDetection = function () {
-        for (var _i = 0, _a = this.world.enemiesOnScreen; _i < _a.length; _i++) {
-            var e = _a[_i];
-            if (this.world.player.collisionWith(e)) {
+        for (var i = 0; i < this.world.enemiesOnScreen.length; i++) {
+            var currentEnemy = this.world.enemiesOnScreen[i];
+            if (this.world.player.collisionWith(currentEnemy)) {
                 this.healthbar.decrement(6);
+            }
+            for (var _i = 0, _a = this.world.bulletsOnScreen; _i < _a.length; _i++) {
+                var b = _a[_i];
+                if (b.collisionWith(currentEnemy)) {
+                    currentEnemy.isDead = true;
+                    var enemyIndex = this.world.drawables.indexOf(currentEnemy);
+                    this.world.drawables.splice(enemyIndex, 1);
+                    this.world.enemiesOnScreen.splice(i, 1);
+                }
             }
         }
     };
@@ -112,8 +122,11 @@ var Drawable = (function () {
 }());
 var Enemy = (function (_super) {
     __extends(Enemy, _super);
-    function Enemy(x, y) {
+    function Enemy(x, y, sprite, text) {
+        if (text === void 0) { text = ""; }
         var _this = _super.call(this, x, y) || this;
+        _this.isDead = false;
+        _this.id = 0;
         _this.speed = 2;
         _this.onscreen = false;
         _this.elapsedFrames = 0;
@@ -127,17 +140,22 @@ var Enemy = (function (_super) {
             }
             requestAnimationFrame(_this.walk);
         };
+        Enemy.enemyCount++;
+        _this.id = Enemy.enemyCount;
         _this.size = 80;
         _this._observers = [];
         _this.sprite = new Image(_this.size, _this.size);
-        _this.sprite.src = 'astroid.png';
+        _this.sprite.src = sprite;
+        _this.text = text;
         _this.walk();
         return _this;
     }
     Enemy.prototype.draw = function (ctx) {
-        ctx.drawImage(this.sprite, this.x, this.y, this.sprite.width, this.sprite.height);
-        ctx.font = "10px Arial";
-        ctx.fillText("Enemy", this.x, this.y);
+        if (!this.isDead) {
+            ctx.drawImage(this.sprite, this.x, this.y, this.sprite.width, this.sprite.height);
+            ctx.font = "20px Arial";
+            ctx.fillText(this.text, this.x + 10, this.y + 90);
+        }
     };
     Enemy.prototype.RegisterObserver = function (obs) {
         this._observers.push(obs);
@@ -147,6 +165,7 @@ var Enemy = (function (_super) {
             this._observers[i].ReceiveNotification(this);
         }
     };
+    Enemy.enemyCount = 0;
     return Enemy;
 }(Drawable));
 var Goal = (function (_super) {
@@ -154,7 +173,8 @@ var Goal = (function (_super) {
     function Goal(x, y) {
         var _this = _super.call(this, x, y) || this;
         _this.walk = function () {
-            _this.y += 2;
+            if (_this.y < 300)
+                _this.y += 2;
             requestAnimationFrame(_this.walk);
         };
         _this.walk();
@@ -162,8 +182,8 @@ var Goal = (function (_super) {
     }
     Goal.prototype.draw = function (ctx) {
         ctx.fillStyle = "red";
-        ctx.font = "100px Arial";
-        ctx.fillText("TRYGG ARBETSPLATS UPPNÅDD", this.x, this.y);
+        ctx.font = "40px Arial";
+        ctx.fillText("TRYGG ARBETSPLATS UPPNADD", this.x, this.y);
     };
     return Goal;
 }(Drawable));
@@ -214,6 +234,9 @@ var Level = (function () {
 }());
 var LevelManager = (function () {
     function LevelManager() {
+        this.astroid = 'astroid.png';
+        this.robber = 'robber.png';
+        this.angel = 'angel.png';
         this.levels = new Array();
     }
     LevelManager.prototype.Createlevel = function (nr) {
@@ -226,113 +249,113 @@ var LevelManager = (function () {
     };
     LevelManager.prototype.CreateLevel1 = function () {
         this.levels[1] = new Level();
-        this.levels[1].enemies.push(new Enemy(700, 200));
-        this.levels[1].enemies.push(new Enemy(200, 400));
-        this.levels[1].enemies.push(new Enemy(900, 300));
-        this.levels[1].enemies.push(new Enemy(400, 0));
-        this.levels[1].enemies.push(new Enemy(600, -100));
-        this.levels[1].enemies.push(new Enemy(1100, -150));
-        this.levels[1].enemies.push(new Enemy(900, -200));
-        this.levels[1].enemies.push(new Enemy(300, -500));
-        this.levels[1].enemies.push(new Enemy(500, -600));
-        this.levels[1].enemies.push(new Enemy(400, -700));
-        this.levels[1].enemies.push(new Enemy(800, -800));
-        this.levels[1].enemies.push(new Enemy(100, -800));
-        this.levels[1].enemies.push(new Enemy(1100, -850));
-        this.levels[1].enemies.push(new Enemy(600, -850));
-        this.levels[1].enemies.push(new Enemy(200, -900));
-        this.levels[1].enemies.push(new Enemy(400, -950));
-        this.levels[1].enemies.push(new Enemy(800, -1100));
-        this.levels[1].enemies.push(new Enemy(100, -1150));
-        this.levels[1].enemies.push(new Enemy(1100, -1300));
-        this.levels[1].enemies.push(new Enemy(600, -1300));
-        this.levels[1].enemies.push(new Enemy(750, -1400));
-        this.levels[1].enemies.push(new Enemy(400, -1450));
-        this.levels[1].enemies.push(new Enemy(800, -1600));
-        this.levels[1].enemies.push(new Enemy(500, -1750));
-        this.levels[1].enemies.push(new Enemy(1100, -1800));
-        this.levels[1].enemies.push(new Enemy(150, -1900));
-        this.levels[1].enemies.push(new Enemy(100, -2000));
-        this.levels[1].enemies.push(new Enemy(300, -2100));
-        this.levels[1].enemies.push(new Enemy(750, -2200));
-        this.levels[1].enemies.push(new Enemy(400, -2300));
-        this.levels[1].enemies.push(new Enemy(150, -2500));
-        this.levels[1].enemies.push(new Enemy(500, -2500));
-        this.levels[1].enemies.push(new Enemy(800, -2500));
-        this.levels[1].enemies.push(new Enemy(1100, -2500));
-        this.levels[1].enemies.push(new Enemy(150, -2600));
-        this.levels[1].enemies.push(new Enemy(500, -2600));
-        this.levels[1].enemies.push(new Enemy(800, -2600));
-        this.levels[1].enemies.push(new Enemy(1100, -2600));
-        this.levels[1].enemies.push(new Enemy(150, -2700));
-        this.levels[1].enemies.push(new Enemy(500, -2700));
-        this.levels[1].enemies.push(new Enemy(800, -2700));
-        this.levels[1].enemies.push(new Enemy(1100, -2700));
-        this.levels[1].enemies.push(new Enemy(150, -2800));
-        this.levels[1].enemies.push(new Enemy(500, -2800));
-        this.levels[1].enemies.push(new Enemy(800, -2800));
-        this.levels[1].enemies.push(new Enemy(1100, -2800));
-        this.levels[1].enemies.push(new Enemy(150, -2900));
-        this.levels[1].enemies.push(new Enemy(500, -2900));
-        this.levels[1].enemies.push(new Enemy(800, -2900));
-        this.levels[1].enemies.push(new Enemy(1100, -2900));
-        this.levels[1].enemies.push(new Enemy(200, -3000));
-        this.levels[1].enemies.push(new Enemy(550, -3000));
-        this.levels[1].enemies.push(new Enemy(850, -3000));
-        this.levels[1].enemies.push(new Enemy(1150, -3000));
-        this.levels[1].enemies.push(new Enemy(250, -3100));
-        this.levels[1].enemies.push(new Enemy(600, -3100));
-        this.levels[1].enemies.push(new Enemy(900, -3100));
-        this.levels[1].enemies.push(new Enemy(1200, -3100));
-        this.levels[1].enemies.push(new Enemy(300, -3200));
-        this.levels[1].enemies.push(new Enemy(650, -3200));
-        this.levels[1].enemies.push(new Enemy(950, -3200));
-        this.levels[1].enemies.push(new Enemy(1250, -3200));
-        this.levels[1].enemies.push(new Enemy(350, -3300));
-        this.levels[1].enemies.push(new Enemy(700, -3300));
-        this.levels[1].enemies.push(new Enemy(1000, -3300));
-        this.levels[1].enemies.push(new Enemy(1300, -3300));
-        this.levels[1].enemies.push(new Enemy(400, -3400));
-        this.levels[1].enemies.push(new Enemy(750, -3400));
-        this.levels[1].enemies.push(new Enemy(1050, -3400));
-        this.levels[1].enemies.push(new Enemy(1350, -3400));
-        this.levels[1].enemies.push(new Enemy(350, -3500));
-        this.levels[1].enemies.push(new Enemy(700, -3500));
-        this.levels[1].enemies.push(new Enemy(1000, -3500));
-        this.levels[1].enemies.push(new Enemy(1300, -3500));
-        this.levels[1].enemies.push(new Enemy(300, -3600));
-        this.levels[1].enemies.push(new Enemy(650, -3600));
-        this.levels[1].enemies.push(new Enemy(950, -3600));
-        this.levels[1].enemies.push(new Enemy(1250, -3600));
-        this.levels[1].enemies.push(new Enemy(250, -3700));
-        this.levels[1].enemies.push(new Enemy(600, -3700));
-        this.levels[1].enemies.push(new Enemy(900, -3700));
-        this.levels[1].enemies.push(new Enemy(1200, -3700));
-        this.levels[1].enemies.push(new Enemy(200, -3800));
-        this.levels[1].enemies.push(new Enemy(550, -3800));
-        this.levels[1].enemies.push(new Enemy(850, -3800));
-        this.levels[1].enemies.push(new Enemy(1150, -3800));
-        this.levels[1].enemies.push(new Enemy(150, -3900));
-        this.levels[1].enemies.push(new Enemy(500, -3900));
-        this.levels[1].enemies.push(new Enemy(800, -3900));
-        this.levels[1].enemies.push(new Enemy(1100, -3900));
-        this.levels[1].enemies.push(new Enemy(150, -4000));
-        this.levels[1].enemies.push(new Enemy(500, -4000));
-        this.levels[1].enemies.push(new Enemy(800, -4000));
-        this.levels[1].enemies.push(new Enemy(1100, -4000));
-        this.levels[1].enemies.push(new Enemy(150, -4100));
-        this.levels[1].enemies.push(new Enemy(500, -4100));
-        this.levels[1].enemies.push(new Enemy(800, -4100));
-        this.levels[1].enemies.push(new Enemy(1100, -4100));
-        this.levels[1].enemies.push(new Enemy(150, -4200));
-        this.levels[1].enemies.push(new Enemy(500, -4200));
-        this.levels[1].enemies.push(new Enemy(800, -4200));
-        this.levels[1].enemies.push(new Enemy(1100, -4200));
-        this.levels[1].enemies.push(new Enemy(150, -4300));
-        this.levels[1].enemies.push(new Enemy(500, -4300));
-        this.levels[1].enemies.push(new Enemy(800, -4300));
-        this.levels[1].enemies.push(new Enemy(1100, -4300));
-        this.levels[1].goal = new Goal(100, 0);
+        this.levels[1].enemies.push(new Enemy(700, 200, this.astroid));
+        this.levels[1].enemies.push(new Enemy(200, 400, this.astroid));
+        this.levels[1].enemies.push(new Enemy(900, 300, this.angel, "Student"));
+        this.levels[1].enemies.push(new Enemy(400, 0, this.robber, "Mordare"));
+        this.levels[1].enemies.push(new Enemy(600, -100, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -150, this.astroid));
+        this.levels[1].enemies.push(new Enemy(900, -200, this.angel, "Duktig pojke"));
+        this.levels[1].enemies.push(new Enemy(300, -500, this.astroid));
+        this.levels[1].enemies.push(new Enemy(500, -600, this.robber, "Narkotikabrott"));
+        this.levels[1].enemies.push(new Enemy(400, -700, this.astroid));
+        this.levels[1].enemies.push(new Enemy(800, -800, this.astroid));
+        this.levels[1].enemies.push(new Enemy(100, -800, this.angel, "Byradirektor"));
+        this.levels[1].enemies.push(new Enemy(1100, -850, this.angel, "VD"));
+        this.levels[1].enemies.push(new Enemy(600, -850, this.astroid));
+        this.levels[1].enemies.push(new Enemy(200, -900, this.robber, "Skattefuskare"));
+        this.levels[1].enemies.push(new Enemy(400, -950, this.astroid));
+        this.levels[1].enemies.push(new Enemy(800, -1100, this.angel, "Atlet"));
+        this.levels[1].enemies.push(new Enemy(100, -1150, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -1300, this.astroid));
+        this.levels[1].enemies.push(new Enemy(600, -1300, this.astroid));
+        this.levels[1].enemies.push(new Enemy(750, -1400, this.robber, "Valdtacktsman"));
+        this.levels[1].enemies.push(new Enemy(400, -1450, this.angel, "Vanlig Svensson"));
+        this.levels[1].enemies.push(new Enemy(800, -1600, this.astroid));
+        this.levels[1].enemies.push(new Enemy(500, -1750, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -1800, this.robber, "Drogkartell"));
+        this.levels[1].enemies.push(new Enemy(150, -1900, this.astroid));
+        this.levels[1].enemies.push(new Enemy(100, -2000, this.astroid));
+        this.levels[1].enemies.push(new Enemy(300, -2100, this.astroid));
+        this.levels[1].enemies.push(new Enemy(750, -2200, this.astroid));
+        this.levels[1].enemies.push(new Enemy(400, -2300, this.astroid));
+        this.levels[1].enemies.push(new Enemy(150, -2500, this.robber, "Jimmie Akesson"));
+        this.levels[1].enemies.push(new Enemy(500, -2500, this.astroid));
+        this.levels[1].enemies.push(new Enemy(800, -2500, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -2500, this.astroid));
+        this.levels[1].enemies.push(new Enemy(150, -2600, this.astroid));
+        this.levels[1].enemies.push(new Enemy(500, -2600, this.astroid));
+        this.levels[1].enemies.push(new Enemy(800, -2600, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -2600, this.astroid));
+        this.levels[1].enemies.push(new Enemy(150, -2700, this.astroid));
+        this.levels[1].enemies.push(new Enemy(500, -2700, this.astroid));
+        this.levels[1].enemies.push(new Enemy(800, -2700, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -2700, this.astroid));
+        this.levels[1].enemies.push(new Enemy(150, -2800, this.astroid));
+        this.levels[1].enemies.push(new Enemy(500, -2800, this.astroid));
+        this.levels[1].enemies.push(new Enemy(800, -2800, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -2800, this.astroid));
+        this.levels[1].enemies.push(new Enemy(150, -2900, this.astroid));
+        this.levels[1].enemies.push(new Enemy(500, -2900, this.astroid));
+        this.levels[1].enemies.push(new Enemy(800, -2900, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -2900, this.astroid));
+        this.levels[1].enemies.push(new Enemy(200, -3000, this.astroid));
+        this.levels[1].enemies.push(new Enemy(550, -3000, this.astroid));
+        this.levels[1].enemies.push(new Enemy(850, -3000, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1150, -3000, this.astroid));
+        this.levels[1].enemies.push(new Enemy(250, -3100, this.astroid));
+        this.levels[1].enemies.push(new Enemy(600, -3100, this.astroid));
+        this.levels[1].enemies.push(new Enemy(900, -3100, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1200, -3100, this.astroid));
+        this.levels[1].enemies.push(new Enemy(300, -3200, this.astroid));
+        this.levels[1].enemies.push(new Enemy(650, -3200, this.astroid));
+        this.levels[1].enemies.push(new Enemy(950, -3200, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1250, -3200, this.astroid));
+        this.levels[1].enemies.push(new Enemy(350, -3300, this.astroid));
+        this.levels[1].enemies.push(new Enemy(700, -3300, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1000, -3300, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1300, -3300, this.astroid));
+        this.levels[1].enemies.push(new Enemy(400, -3400, this.astroid));
+        this.levels[1].enemies.push(new Enemy(750, -3400, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1050, -3400, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1350, -3400, this.astroid));
+        this.levels[1].enemies.push(new Enemy(350, -3500, this.astroid));
+        this.levels[1].enemies.push(new Enemy(700, -3500, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1000, -3500, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1300, -3500, this.astroid));
+        this.levels[1].enemies.push(new Enemy(300, -3600, this.astroid));
+        this.levels[1].enemies.push(new Enemy(650, -3600, this.astroid));
+        this.levels[1].enemies.push(new Enemy(950, -3600, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1250, -3600, this.astroid));
+        this.levels[1].enemies.push(new Enemy(250, -3700, this.astroid));
+        this.levels[1].enemies.push(new Enemy(600, -3700, this.astroid));
+        this.levels[1].enemies.push(new Enemy(900, -3700, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1200, -3700, this.astroid));
+        this.levels[1].enemies.push(new Enemy(200, -3800, this.astroid));
+        this.levels[1].enemies.push(new Enemy(550, -3800, this.astroid));
+        this.levels[1].enemies.push(new Enemy(850, -3800, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1150, -3800, this.astroid));
+        this.levels[1].enemies.push(new Enemy(150, -3900, this.astroid));
+        this.levels[1].enemies.push(new Enemy(500, -3900, this.astroid));
+        this.levels[1].enemies.push(new Enemy(800, -3900, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -3900, this.astroid));
+        this.levels[1].enemies.push(new Enemy(150, -4000, this.astroid));
+        this.levels[1].enemies.push(new Enemy(500, -4000, this.astroid));
+        this.levels[1].enemies.push(new Enemy(800, -4000, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -4000, this.astroid));
+        this.levels[1].enemies.push(new Enemy(150, -4100, this.astroid));
+        this.levels[1].enemies.push(new Enemy(500, -4100, this.astroid));
+        this.levels[1].enemies.push(new Enemy(800, -4100, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -4100, this.astroid));
+        this.levels[1].enemies.push(new Enemy(150, -4200, this.astroid));
+        this.levels[1].enemies.push(new Enemy(500, -4200, this.astroid));
+        this.levels[1].enemies.push(new Enemy(800, -4200, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -4200, this.astroid));
+        this.levels[1].enemies.push(new Enemy(150, -4300, this.astroid));
+        this.levels[1].enemies.push(new Enemy(500, -4300, this.astroid));
+        this.levels[1].enemies.push(new Enemy(800, -4300, this.astroid));
+        this.levels[1].enemies.push(new Enemy(1100, -4300, this.astroid));
+        this.levels[1].goal = new Goal(100, -5000);
         return this.levels[1];
     };
     return LevelManager;
@@ -345,6 +368,7 @@ var Bullet = (function (_super) {
             _this.y += -10;
             requestAnimationFrame(_this.walk);
         };
+        _this.size = 8;
         _this.walk();
         return _this;
     }
@@ -391,6 +415,7 @@ var World = (function () {
         this.enemies = [];
         this.drawables = [];
         this.enemiesOnScreen = [];
+        this.bulletsOnScreen = [];
         this.levelManager = new LevelManager();
         this.currentLevel = this.levelManager.Createlevel(1);
         this.enemies = this.currentLevel.enemies.slice();

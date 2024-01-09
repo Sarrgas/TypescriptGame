@@ -2,6 +2,7 @@ class World implements Patterns.Interfaces.IObserver {
     public player: Player;
     public enemies: Enemy[];
     public enemiesOnScreen: Enemy[];
+    public bulletsOnScreen: Bullet[];
     public drawables: Drawable[];
     public currentLevel: Level;
     private levelManager: LevelManager;
@@ -10,6 +11,7 @@ class World implements Patterns.Interfaces.IObserver {
         this.enemies = [];
         this.drawables = [];
         this.enemiesOnScreen = [];
+        this.bulletsOnScreen = [];
         this.levelManager = new LevelManager();
         this.currentLevel = this.levelManager.Createlevel(1);
         this.enemies = this.currentLevel.enemies.slice();
