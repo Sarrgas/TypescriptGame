@@ -14,6 +14,7 @@ class World implements Patterns.Interfaces.IObserver {
         this.currentLevel = this.levelManager.Createlevel(1);
         this.enemies = this.currentLevel.enemies.slice();
         this.drawables = this.currentLevel.enemies.slice();
+        this.drawables.push(this.currentLevel.goal);
     }
 
     public addEnemy(e : Enemy){

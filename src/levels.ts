@@ -1,5 +1,6 @@
 class Level{
     enemies: Enemy[] = new Array<Enemy>();
+    goal: Goal;
 }
 
 class LevelManager{
@@ -122,6 +123,7 @@ class LevelManager{
         this.levels[1].enemies.push(new Enemy(500, -4300));
         this.levels[1].enemies.push(new Enemy(800, -4300));
         this.levels[1].enemies.push(new Enemy(1100, -4300));
+        this.levels[1].goal = new Goal(100, 0);
         return this.levels[1];
     }
 }

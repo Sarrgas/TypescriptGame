@@ -1,8 +1,13 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -31,6 +36,8 @@ var Game = (function () {
             this.world.player.goDown();
         if (Key.isDown(Key.RIGHT))
             this.world.player.goRight();
+        if (Key.isDown(Key.SPACE))
+            this.shoot();
     };
     Game.prototype.update = function () {
         this.collisionDetection();
@@ -41,6 +48,10 @@ var Game = (function () {
             var drawable = _a[_i];
             drawable.draw(this.ctx);
         }
+    };
+    Game.prototype.shoot = function () {
+        console.log('SPACE');
+        this.world.drawables.push(new Bullet(this.world.player.x, this.world.player.y));
     };
     Game.prototype.collisionDetection = function () {
         for (var _i = 0, _a = this.world.enemiesOnScreen; _i < _a.length; _i++) {
@@ -125,6 +136,8 @@ var Enemy = (function (_super) {
     }
     Enemy.prototype.draw = function (ctx) {
         ctx.drawImage(this.sprite, this.x, this.y, this.sprite.width, this.sprite.height);
+        ctx.font = "10px Arial";
+        ctx.fillText("Enemy", this.x, this.y);
     };
     Enemy.prototype.RegisterObserver = function (obs) {
         this._observers.push(obs);
@@ -135,6 +148,24 @@ var Enemy = (function (_super) {
         }
     };
     return Enemy;
+}(Drawable));
+var Goal = (function (_super) {
+    __extends(Goal, _super);
+    function Goal(x, y) {
+        var _this = _super.call(this, x, y) || this;
+        _this.walk = function () {
+            _this.y += 2;
+            requestAnimationFrame(_this.walk);
+        };
+        _this.walk();
+        return _this;
+    }
+    Goal.prototype.draw = function (ctx) {
+        ctx.fillStyle = "red";
+        ctx.font = "100px Arial";
+        ctx.fillText("TRYGG ARBETSPLATS UPPNÅDD", this.x, this.y);
+    };
+    return Goal;
 }(Drawable));
 var Healthbar = (function (_super) {
     __extends(Healthbar, _super);
@@ -160,6 +191,7 @@ var Healthbar = (function (_super) {
 }(Drawable));
 var Key = {
     _pressed: {},
+    SPACE: 32,
     LEFT: 37,
     UP: 38,
     RIGHT: 39,
@@ -300,10 +332,29 @@ var LevelManager = (function () {
         this.levels[1].enemies.push(new Enemy(500, -4300));
         this.levels[1].enemies.push(new Enemy(800, -4300));
         this.levels[1].enemies.push(new Enemy(1100, -4300));
+        this.levels[1].goal = new Goal(100, 0);
         return this.levels[1];
     };
     return LevelManager;
 }());
+var Bullet = (function (_super) {
+    __extends(Bullet, _super);
+    function Bullet(x, y) {
+        var _this = _super.call(this, x, y) || this;
+        _this.walk = function () {
+            _this.y += -10;
+            requestAnimationFrame(_this.walk);
+        };
+        _this.walk();
+        return _this;
+    }
+    Bullet.prototype.draw = function (ctx) {
+        ctx.fillStyle = "yellow";
+        ctx.font = "100px Arial";
+        ctx.fillText(".", this.x, this.y);
+    };
+    return Bullet;
+}(Drawable));
 var Player = (function (_super) {
     __extends(Player, _super);
     function Player(x, y) {
@@ -344,6 +395,7 @@ var World = (function () {
         this.currentLevel = this.levelManager.Createlevel(1);
         this.enemies = this.currentLevel.enemies.slice();
         this.drawables = this.currentLevel.enemies.slice();
+        this.drawables.push(this.currentLevel.goal);
     }
     World.prototype.addEnemy = function (e) {
         this.enemies.push(e);

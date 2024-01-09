@@ -28,6 +28,8 @@ class Enemy extends Drawable implements Patterns.Interfaces.IObservable{
 
     public draw(ctx: CanvasRenderingContext2D) : void{
         ctx.drawImage(this.sprite,this.x, this.y, this.sprite.width, this.sprite.height);
+        ctx.font = "10px Arial";
+        ctx.fillText("Enemy",this.x,this.y);
     }
 
     

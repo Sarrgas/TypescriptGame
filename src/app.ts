@@ -19,7 +19,8 @@ class Game{
         if (Key.isDown(Key.UP)) this.world.player.goUp();
         if (Key.isDown(Key.LEFT)) this.world.player.goLeft();
         if (Key.isDown(Key.DOWN)) this.world.player.goDown();
-        if (Key.isDown(Key.RIGHT)) this.world.player.goRight();     
+        if (Key.isDown(Key.RIGHT)) this.world.player.goRight(); 
+        if (Key.isDown(Key.SPACE)) this.shoot();     
     }
 
     private update() : void{
@@ -31,6 +32,11 @@ class Game{
         for (const drawable of this.world.drawables) {
             drawable.draw(this.ctx);
         }
+    }
+
+    private shoot() : void {
+        console.log('SPACE')
+        this.world.drawables.push(new Bullet(this.world.player.x, this.world.player.y))
     }
 
     private collisionDetection() : void{
