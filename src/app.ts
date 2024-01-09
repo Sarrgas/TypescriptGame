@@ -48,16 +48,16 @@ class Game{
                 this.healthbar.decrement(6);
             }
 
-            for(const b of this.world.bulletsOnScreen) {
-                if(b.collisionWith(currentEnemy)){
-                    currentEnemy.isDead = true;
-                    var enemyIndex = this.world.drawables.indexOf(currentEnemy)
-                    this.world.drawables.splice(enemyIndex,1)
-                    this.world.enemiesOnScreen.splice(i,1)
+            if(currentEnemy.isDestroyable){
+                for(const b of this.world.bulletsOnScreen) {
+                    if(b.collisionWith(currentEnemy)){
+                        currentEnemy.isDead = true;
+                        var enemyIndex = this.world.drawables.indexOf(currentEnemy)
+                        this.world.drawables.splice(enemyIndex,1)
+                        this.world.enemiesOnScreen.splice(i,1)
+                    }
                 }
             }
-
-            
         }
     }
 

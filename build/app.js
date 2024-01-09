@@ -60,13 +60,15 @@ var Game = (function () {
             if (this.world.player.collisionWith(currentEnemy)) {
                 this.healthbar.decrement(6);
             }
-            for (var _i = 0, _a = this.world.bulletsOnScreen; _i < _a.length; _i++) {
-                var b = _a[_i];
-                if (b.collisionWith(currentEnemy)) {
-                    currentEnemy.isDead = true;
-                    var enemyIndex = this.world.drawables.indexOf(currentEnemy);
-                    this.world.drawables.splice(enemyIndex, 1);
-                    this.world.enemiesOnScreen.splice(i, 1);
+            if (currentEnemy.isDestroyable) {
+                for (var _i = 0, _a = this.world.bulletsOnScreen; _i < _a.length; _i++) {
+                    var b = _a[_i];
+                    if (b.collisionWith(currentEnemy)) {
+                        currentEnemy.isDead = true;
+                        var enemyIndex = this.world.drawables.indexOf(currentEnemy);
+                        this.world.drawables.splice(enemyIndex, 1);
+                        this.world.enemiesOnScreen.splice(i, 1);
+                    }
                 }
             }
         }
@@ -126,6 +128,7 @@ var Enemy = (function (_super) {
         if (text === void 0) { text = ""; }
         var _this = _super.call(this, x, y) || this;
         _this.isDead = false;
+        _this.isDestroyable = false;
         _this.id = 0;
         _this.speed = 2;
         _this.onscreen = false;
@@ -147,6 +150,7 @@ var Enemy = (function (_super) {
         _this.sprite = new Image(_this.size, _this.size);
         _this.sprite.src = sprite;
         _this.text = text;
+        _this.isDestroyable = text != "";
         _this.walk();
         return _this;
     }
@@ -276,10 +280,10 @@ var LevelManager = (function () {
         this.levels[1].enemies.push(new Enemy(1100, -1800, this.robber, "Drogkartell"));
         this.levels[1].enemies.push(new Enemy(150, -1900, this.astroid));
         this.levels[1].enemies.push(new Enemy(100, -2000, this.astroid));
-        this.levels[1].enemies.push(new Enemy(300, -2100, this.astroid));
+        this.levels[1].enemies.push(new Enemy(300, -2100, this.robber, "Jimmie Akesson"));
         this.levels[1].enemies.push(new Enemy(750, -2200, this.astroid));
         this.levels[1].enemies.push(new Enemy(400, -2300, this.astroid));
-        this.levels[1].enemies.push(new Enemy(150, -2500, this.robber, "Jimmie Akesson"));
+        this.levels[1].enemies.push(new Enemy(150, -2500, this.astroid));
         this.levels[1].enemies.push(new Enemy(500, -2500, this.astroid));
         this.levels[1].enemies.push(new Enemy(800, -2500, this.astroid));
         this.levels[1].enemies.push(new Enemy(1100, -2500, this.astroid));
@@ -355,7 +359,7 @@ var LevelManager = (function () {
         this.levels[1].enemies.push(new Enemy(500, -4300, this.astroid));
         this.levels[1].enemies.push(new Enemy(800, -4300, this.astroid));
         this.levels[1].enemies.push(new Enemy(1100, -4300, this.astroid));
-        this.levels[1].goal = new Goal(100, -5000);
+        this.levels[1].goal = new Goal(100, -4500);
         return this.levels[1];
     };
     return LevelManager;
