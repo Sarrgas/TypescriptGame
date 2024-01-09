@@ -4,6 +4,8 @@ class Game{
     private score: ScoreCounter;
     private isRunning: boolean = true;
     private world: World;
+    private isMusicPlaying: boolean = false;
+    private audio = new Audio("music.mp3");
  
     private gameLoop = () => {
         this.processInput();
@@ -22,7 +24,8 @@ class Game{
         if (Key.isDown(Key.LEFT)) this.world.player.goLeft();
         if (Key.isDown(Key.DOWN)) this.world.player.goDown();
         if (Key.isDown(Key.RIGHT)) this.world.player.goRight(); 
-        if (Key.isDown(Key.SPACE)) this.shoot();     
+        if (Key.isDown(Key.SPACE)) this.shoot();    
+        if(!this.isMusicPlaying) this.audio.play(); 
     }
 
     private update() : void{

@@ -17,6 +17,8 @@ var Game = (function () {
     function Game() {
         var _this = this;
         this.isRunning = true;
+        this.isMusicPlaying = false;
+        this.audio = new Audio("music.mp3");
         this.gameLoop = function () {
             _this.processInput();
             _this.update();
@@ -38,6 +40,8 @@ var Game = (function () {
             this.world.player.goRight();
         if (Key.isDown(Key.SPACE))
             this.shoot();
+        if (!this.isMusicPlaying)
+            this.audio.play();
     };
     Game.prototype.update = function () {
         this.collisionDetection();
