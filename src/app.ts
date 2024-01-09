@@ -1,6 +1,7 @@
 class Game{
     private ctx: CanvasRenderingContext2D;
     private healthbar: Healthbar;
+    private score: ScoreCounter;
     private isRunning: boolean = true;
     private world: World;
  
@@ -14,6 +15,7 @@ class Game{
             requestAnimationFrame(this.gameLoop);
         }
     }
+    
 
     private processInput() : void{
         if (Key.isDown(Key.UP)) this.world.player.goUp();
@@ -51,6 +53,13 @@ class Game{
             if(currentEnemy.isDestroyable){
                 for(const b of this.world.bulletsOnScreen) {
                     if(b.collisionWith(currentEnemy)){
+                        console.log(currentEnemy.spriteSrc)
+                        if(currentEnemy.spriteSrc == "robber.png"){
+                            this.score.increment(50)
+                        }
+                        else{
+                            this.score.decrement(50)
+                        }
                         currentEnemy.isDead = true;
                         var enemyIndex = this.world.drawables.indexOf(currentEnemy)
                         this.world.drawables.splice(enemyIndex,1)
@@ -83,6 +92,9 @@ class Game{
 
         this.healthbar = new Healthbar(140,650);
         this.world.addGUIelement(this.healthbar);
+
+        this.score = new ScoreCounter();
+        this.world.addGUIelement(this.score)
 
         for (let i = 0; i < this.world.currentLevel.enemies.length; i++) {
             this.world.currentLevel.enemies[i].RegisterObserver(this.world);

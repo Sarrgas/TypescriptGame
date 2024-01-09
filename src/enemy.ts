@@ -3,6 +3,7 @@ class Enemy extends Drawable implements Patterns.Interfaces.IObservable{
 
     public isDead: boolean = false;
     public isDestroyable: boolean = false;
+    public spriteSrc: string = "";
 
     private id: number = 0;
     private text: string;
@@ -21,6 +22,7 @@ class Enemy extends Drawable implements Patterns.Interfaces.IObservable{
         this.sprite.src = sprite
         this.text = text;
         this.isDestroyable = text != "";
+        this.spriteSrc = sprite;
 
         this.walk();
     }

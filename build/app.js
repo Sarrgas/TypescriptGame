@@ -64,6 +64,13 @@ var Game = (function () {
                 for (var _i = 0, _a = this.world.bulletsOnScreen; _i < _a.length; _i++) {
                     var b = _a[_i];
                     if (b.collisionWith(currentEnemy)) {
+                        console.log(currentEnemy.spriteSrc);
+                        if (currentEnemy.spriteSrc == "robber.png") {
+                            this.score.increment(50);
+                        }
+                        else {
+                            this.score.decrement(50);
+                        }
                         currentEnemy.isDead = true;
                         var enemyIndex = this.world.drawables.indexOf(currentEnemy);
                         this.world.drawables.splice(enemyIndex, 1);
@@ -91,6 +98,8 @@ var Game = (function () {
         this.world.addPlayer(new Player(400, 400));
         this.healthbar = new Healthbar(140, 650);
         this.world.addGUIelement(this.healthbar);
+        this.score = new ScoreCounter();
+        this.world.addGUIelement(this.score);
         for (var i = 0; i < this.world.currentLevel.enemies.length; i++) {
             this.world.currentLevel.enemies[i].RegisterObserver(this.world);
         }
@@ -129,6 +138,7 @@ var Enemy = (function (_super) {
         var _this = _super.call(this, x, y) || this;
         _this.isDead = false;
         _this.isDestroyable = false;
+        _this.spriteSrc = "";
         _this.id = 0;
         _this.speed = 2;
         _this.onscreen = false;
@@ -151,6 +161,7 @@ var Enemy = (function (_super) {
         _this.sprite.src = sprite;
         _this.text = text;
         _this.isDestroyable = text != "";
+        _this.spriteSrc = sprite;
         _this.walk();
         return _this;
     }
@@ -413,6 +424,26 @@ var Player = (function (_super) {
         this._observers.push(obs);
     };
     return Player;
+}(Drawable));
+var ScoreCounter = (function (_super) {
+    __extends(ScoreCounter, _super);
+    function ScoreCounter() {
+        var _this = _super.call(this, 20, 20) || this;
+        _this.score = 0;
+        _this.size = 200;
+        return _this;
+    }
+    ScoreCounter.prototype.draw = function (ctx) {
+        ctx.font = "20px Arial";
+        ctx.fillText("Score: ".concat(this.score), 20, 20);
+    };
+    ScoreCounter.prototype.decrement = function (amount) {
+        this.score -= amount;
+    };
+    ScoreCounter.prototype.increment = function (amount) {
+        this.score += amount;
+    };
+    return ScoreCounter;
 }(Drawable));
 var World = (function () {
     function World() {

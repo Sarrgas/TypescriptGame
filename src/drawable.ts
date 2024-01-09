@@ -2,7 +2,7 @@ class Drawable{
     public x: number;
     public y: number;
     protected size: number;
-    protected sprite: HTMLImageElement;
+    public sprite: HTMLImageElement;
 
     public draw(ctx: CanvasRenderingContext2D) : void{}
 
