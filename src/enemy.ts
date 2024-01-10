@@ -8,6 +8,7 @@ class Enemy extends Drawable implements Patterns.Interfaces.IObservable{
     private id: number = 0;
     private text: string;
     private speed = 2;
+    private xspeed = 0;
     private onscreen: boolean = false;
     private elapsedFrames: number = 0;
     private _observers: Patterns.Interfaces.IObserver[];
@@ -24,12 +25,26 @@ class Enemy extends Drawable implements Patterns.Interfaces.IObservable{
         this.isDestroyable = text != "";
         this.spriteSrc = sprite;
 
+        if(this.spriteSrc == 'thought.png'){
+            this.isDestroyable = false
+            this.xspeed = this.x > 600 ? -7 : 7
+        }
+
         this.walk();
     }
 
 
     private walk = () => {
         this.y += this.speed;
+        this.x += this.xspeed;
+
+        if(this.spriteSrc == 'thought.png'){
+            if(this.x < 0 || this.x > 1280)
+                this.xspeed = this.xspeed * -1
+            // else if(this.x > 1280)
+            //     this.x -= 5
+        }
+
         this.elapsedFrames++;
         if (!this.onscreen && this.elapsedFrames >= 60 && this.y > 0) {
             this.elapsedFrames = 0;

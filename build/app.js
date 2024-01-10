@@ -154,10 +154,16 @@ var Enemy = (function (_super) {
         _this.spriteSrc = "";
         _this.id = 0;
         _this.speed = 2;
+        _this.xspeed = 0;
         _this.onscreen = false;
         _this.elapsedFrames = 0;
         _this.walk = function () {
             _this.y += _this.speed;
+            _this.x += _this.xspeed;
+            if (_this.spriteSrc == 'thought.png') {
+                if (_this.x < 0 || _this.x > 1280)
+                    _this.xspeed = _this.xspeed * -1;
+            }
             _this.elapsedFrames++;
             if (!_this.onscreen && _this.elapsedFrames >= 60 && _this.y > 0) {
                 _this.elapsedFrames = 0;
@@ -175,6 +181,10 @@ var Enemy = (function (_super) {
         _this.text = text;
         _this.isDestroyable = text != "";
         _this.spriteSrc = sprite;
+        if (_this.spriteSrc == 'thought.png') {
+            _this.isDestroyable = false;
+            _this.xspeed = _this.x > 600 ? -7 : 7;
+        }
         _this.walk();
         return _this;
     }
@@ -283,7 +293,6 @@ var LevelManager = (function () {
         this.levels[1].enemies.push(new Enemy(900, 300, this.angel, "Student"));
         this.levels[1].enemies.push(new Enemy(400, 0, this.robber, "Mördare"));
         this.levels[1].enemies.push(new Enemy(600, -100, this.astroid));
-        this.levels[1].enemies.push(new Enemy(1100, -150, this.thought, "Är detta lagligt?"));
         this.levels[1].enemies.push(new Enemy(900, -200, this.angel, "Duktig pojke"));
         this.levels[1].enemies.push(new Enemy(300, -500, this.astroid));
         this.levels[1].enemies.push(new Enemy(500, -600, this.robber, "Narkotikabrott"));
@@ -384,7 +393,23 @@ var LevelManager = (function () {
         this.levels[1].enemies.push(new Enemy(500, -4300, this.astroid));
         this.levels[1].enemies.push(new Enemy(800, -4300, this.astroid));
         this.levels[1].enemies.push(new Enemy(1100, -4300, this.astroid));
-        this.levels[1].goal = new Goal(300, -4500);
+        this.levels[1].enemies.push(new Enemy(1100, -4400, this.thought, "Är detta lagligt?"));
+        this.levels[1].enemies.push(new Enemy(200, -4500, this.thought, "Men GDPR då?"));
+        this.levels[1].enemies.push(new Enemy(800, -4600, this.thought, "Måste man ta kreditupplysning?"));
+        this.levels[1].enemies.push(new Enemy(900, -4700, this.thought, "Hen ska bara städa..."));
+        this.levels[1].enemies.push(new Enemy(300, -4800, this.thought, "Får kandidat veta?"));
+        this.levels[1].enemies.push(new Enemy(20, -4900, this.thought, "Straffet redan avtjänat?"));
+        this.levels[1].enemies.push(new Enemy(250, -5000, this.thought, "Dyrt?"));
+        this.levels[1].enemies.push(new Enemy(1275, -5100, this.thought, "Räcker belastningsregistret?"));
+        this.levels[1].enemies.push(new Enemy(1100, -5200, this.thought, "Kan jag googla?"));
+        this.levels[1].enemies.push(new Enemy(200, -5300, this.thought, "Tar TFO beslutet?"));
+        this.levels[1].enemies.push(new Enemy(800, -5400, this.thought, "Kan man tacka nej?"));
+        this.levels[1].enemies.push(new Enemy(900, -5500, this.thought, "Sitter ni i buskarna och spanar?"));
+        this.levels[1].enemies.push(new Enemy(300, -5600, this.thought, "Är detta lagligt?"));
+        this.levels[1].enemies.push(new Enemy(20, -5700, this.thought, "Måste man ta kreditupplysning?"));
+        this.levels[1].enemies.push(new Enemy(250, -5800, this.thought, "Får kandidat veta?"));
+        this.levels[1].enemies.push(new Enemy(1275, -5900, this.thought, "Dyrt?"));
+        this.levels[1].goal = new Goal(300, -6200);
         return this.levels[1];
     };
     return LevelManager;
@@ -415,8 +440,8 @@ var Player = (function (_super) {
         _this.speed = 3;
         _this._observers = [];
         _this.size = 100;
-        _this.sprite = new Image(_this.size, _this.size);
-        _this.sprite.src = 'ship.png';
+        _this.sprite = new Image(_this.size * 0.7, _this.size);
+        _this.sprite.src = 'teamrocket.png';
         return _this;
     }
     Player.prototype.draw = function (ctx) {

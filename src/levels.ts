@@ -27,7 +27,6 @@ class LevelManager{
         this.levels[1].enemies.push(new Enemy(900, 300, this.angel, "Student"));
         this.levels[1].enemies.push(new Enemy(400, 0, this.robber, "Mördare"));
         this.levels[1].enemies.push(new Enemy(600, -100, this.astroid));
-        this.levels[1].enemies.push(new Enemy(1100, -150, this.thought, "Är detta lagligt?")); //TODO: Nästa steg. Implementera dessa flygandes sidledes. Efter nuvarande slutet.
         this.levels[1].enemies.push(new Enemy(900, -200, this.angel, "Duktig pojke"));
         this.levels[1].enemies.push(new Enemy(300, -500, this.astroid));
         this.levels[1].enemies.push(new Enemy(500, -600, this.robber, "Narkotikabrott"));
@@ -128,7 +127,23 @@ class LevelManager{
         this.levels[1].enemies.push(new Enemy(500, -4300, this.astroid));
         this.levels[1].enemies.push(new Enemy(800, -4300, this.astroid));
         this.levels[1].enemies.push(new Enemy(1100, -4300, this.astroid));
-        this.levels[1].goal = new Goal(300, -4500);
+        this.levels[1].enemies.push(new Enemy(1100, -4400, this.thought, "Är detta lagligt?")); 
+        this.levels[1].enemies.push(new Enemy(200, -4500, this.thought, "Men GDPR då?")); 
+        this.levels[1].enemies.push(new Enemy(800, -4600, this.thought, "Måste man ta kreditupplysning?")); 
+        this.levels[1].enemies.push(new Enemy(900, -4700, this.thought, "Hen ska bara städa...")); 
+        this.levels[1].enemies.push(new Enemy(300, -4800, this.thought, "Får kandidat veta?")); 
+        this.levels[1].enemies.push(new Enemy(20, -4900, this.thought, "Straffet redan avtjänat?")); 
+        this.levels[1].enemies.push(new Enemy(250, -5000, this.thought, "Dyrt?")); 
+        this.levels[1].enemies.push(new Enemy(1275, -5100, this.thought, "Räcker belastningsregistret?"));
+        this.levels[1].enemies.push(new Enemy(1100, -5200, this.thought, "Kan jag googla?")); 
+        this.levels[1].enemies.push(new Enemy(200, -5300, this.thought, "Tar TFO beslutet?")); 
+        this.levels[1].enemies.push(new Enemy(800, -5400, this.thought, "Kan man tacka nej?")); 
+        this.levels[1].enemies.push(new Enemy(900, -5500, this.thought, "Sitter ni i buskarna och spanar?")); 
+        this.levels[1].enemies.push(new Enemy(300, -5600, this.thought, "Är detta lagligt?")); 
+        this.levels[1].enemies.push(new Enemy(20, -5700, this.thought, "Måste man ta kreditupplysning?")); 
+        this.levels[1].enemies.push(new Enemy(250, -5800, this.thought, "Får kandidat veta?")); 
+        this.levels[1].enemies.push(new Enemy(1275, -5900, this.thought, "Dyrt?"));  
+        this.levels[1].goal = new Goal(300, -6200);
         return this.levels[1];
     }
 }

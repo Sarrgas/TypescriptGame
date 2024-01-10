@@ -6,8 +6,9 @@ class Player extends Drawable{
         super(x, y);
         this._observers = [];
         this.size = 100;
-        this.sprite = new Image(this.size,this.size);
-        this.sprite.src = 'ship.png';
+        this.sprite = new Image(this.size*0.7,this.size);
+        this.sprite.src = 'teamrocket.png';
+        // this.sprite.src = 'ship.png';
     }
 
     public draw(ctx: CanvasRenderingContext2D) : void{
